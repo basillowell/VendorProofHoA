@@ -1,20 +1,15 @@
-import { neon } from "@neondatabase/serverless";
+import postgres from "postgres";
 
 /**
- * Server-only handle to the team's database (Neon serverless Postgres over HTTP).
- * The connection string comes from `DATABASE_URL`, which the owner connects via
- * the database card and which is injected into the sandbox and passed to the live
- * host on publish. Resolved lazily (per call, not at module load) so the site
- * still builds and serves before a database is connected — the error only
- * surfaces if a query actually runs without `DATABASE_URL`.
+ * Server-only handle to the team's database (Supabase Postgres).
+ * The connection string comes from `DATABASE_URL`, set in Vercel's
+ * environment variables (or a local .env for dev).
  *
- * Use it only inside a `createServerFn()` handler or an `src/routes/api/*` route
- * (never client code):
+ * Use it only inside a `createServerFn()` handler or an `src/routes/api/*`
+ * route (never client code):
  *
  *   const getPosts = createServerFn().handler(async () => {
  *     const rows = await sql()`select id, title, created_at from posts`;
- *     // Coerce non-primitive columns (timestamps are JS Dates) to strings before
- *     // returning to the client, or React will refuse to render them:
  *     return rows.map((r) => ({ ...r, created_at: String(r.created_at) }));
  *   });
  */
@@ -22,8 +17,8 @@ export const sql = () => {
   const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
-      "DATABASE_URL is not set — connect a database (via the database card) before running queries.",
+      "DATABASE_URL is not set — add your Supabase connection string.",
     );
   }
-  return neon(url);
+  return postgres(url, { ssl: "require" });
 };
