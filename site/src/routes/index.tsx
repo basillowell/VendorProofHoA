@@ -5,16 +5,18 @@ import { useState } from "react";
 
 // Server function to store lead capture form submissions
 const saveLead = createServerFn({ method: "POST" }).handler(
-  async (data: {
-    name: string;
-    company: string;
-    email: string;
-    phone: string;
-    city: string;
-    communities: string;
-    projectTypes: string;
-    currentSoftware: string;
-    testProject: string;
+  async ({ data }: {
+    data: {
+      name: string;
+      company: string;
+      email: string;
+      phone: string;
+      city: string;
+      communities: string;
+      projectTypes: string;
+      currentSoftware: string;
+      testProject: string;
+    };
   }) => {
 try {
       const db = sql();
@@ -691,7 +693,7 @@ function LeadCaptureForm() {
     };
 
     try {
-      const result = await saveLead(data);
+      const result = await saveLead({ data });
 
       if (!result.success) {
         throw new Error("Something went wrong");
