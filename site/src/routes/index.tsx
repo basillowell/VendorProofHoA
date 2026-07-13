@@ -23,9 +23,9 @@ try {
           name, company, email, phone, city, communities,
           project_types, current_software, test_project, created_at
         ) VALUES (
-          ${data.name}, ${data.company}, ${data.email}, ${data.phone},
-          ${data.city}, ${data.communities}, ${data.projectTypes},
-          ${data.currentSoftware}, ${data.testProject}, NOW()
+          ${data.name ?? ""}, ${data.company ?? ""}, ${data.email ?? ""}, ${data.phone ?? ""},
+          ${data.city ?? ""}, ${data.communities ?? ""}, ${data.projectTypes ?? ""},
+          ${data.currentSoftware ?? ""}, ${data.testProject ?? ""}, NOW()
         )
       `;
     } catch (err: unknown) {
