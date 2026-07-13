@@ -16,7 +16,7 @@ const saveLead = createServerFn({ method: "POST" }).handler(
     currentSoftware: string;
     testProject: string;
   }) => {
-    try {
+try {
       const db = sql();
       await db`
         INSERT INTO leads (
@@ -28,11 +28,10 @@ const saveLead = createServerFn({ method: "POST" }).handler(
           ${data.currentSoftware}, ${data.testProject}, NOW()
         )
       `;
-    } catch {
-      // DB not available yet — log and move on
+    } catch (err: unknown) {
+      console.error("[lead-capture] DB insert failed:", err);
     }
-    return { success: true };
-  },
+    return { success: true };  },
 );
 
 export const Route = createFileRoute("/")({
